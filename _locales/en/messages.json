@@ -1,0 +1,26 @@
+{
+	"extName": {
+		"message" : "neyesem"
+		,"description" : "Extension name."
+	}
+	
+	,"extDescription": {
+		"message"  : "Selects a random food at a random restaurant on Yemeksepeti.com"
+		,"description" : "Extension description."
+	}
+	
+	,"pickRestaurantTitle": {
+		"message"  : "Random restaurant"
+		,"description" : ""
+	}
+	
+	,"pickProductTitle": {
+		"message"  : "Random food"
+		,"description" : ""
+	}
+	
+	,"startMessage": {
+		"message"  : "Pick a region to start"
+		,"description" : ""
+	}
+}

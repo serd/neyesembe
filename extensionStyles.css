@@ -1,0 +1,43 @@
+.ysRandomPicker {
+	position: fixed;
+	z-index: 2000;
+}
+
+.ysRandomPicker .item {
+	width: 51px;
+	height: 51px;
+	position: absolute;
+	z-index: 1000;
+	left: 76px;
+	top: 168px;
+	cursor:pointer;
+}
+
+.ysRandomPicker .item.start {
+	background:url('chrome-extension://__MSG_@@extension_id__/img/icon_start_02.png') no-repeat;
+}
+
+.ysRandomPicker .item.start:hover {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon_start_02_hover.png');
+}
+
+.ysRandomPicker .item.pickRestaurant {
+	background:url('chrome-extension://__MSG_@@extension_id__/img/icon_restaurant_03.png') no-repeat;
+}
+
+.ysRandomPicker .item.pickRestaurant:hover  {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon_restaurant_03_hover.png');
+}
+
+.ysRandomPicker .item.pickProduct {
+	background:url('chrome-extension://__MSG_@@extension_id__/img/icon_product_02.png') no-repeat;
+}
+
+.ysRandomPicker .item.pickProduct:hover  {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon_product_02_hover.png');
+}
+
+
+
+
+

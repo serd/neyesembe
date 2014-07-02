@@ -1,0 +1,26 @@
+{
+	"extName": {
+		"message" : "neyesem"
+		,"description" : "Extension name."
+	}
+	
+	,"extDescription": {
+		"message"  : "Yemeksepeti'nde random restoran ve yemek seçmeni sağlar"
+		,"description" : "Extension description."
+	}
+	
+	,"pickRestaurantTitle": {
+		"message"  : "Rastgele restoran"
+		,"description" : ""
+	}
+	
+	,"pickProductTitle": {
+		"message"  : "Rastgele yemek"
+		,"description" : ""
+	}
+	
+	,"startMessage": {
+		"message"  : "Başlamak için semt seçin"
+		,"description" : ""
+	}
+}

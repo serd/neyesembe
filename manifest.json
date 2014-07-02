@@ -1,0 +1,24 @@
+{
+  "name": "__MSG_extName__"
+  ,"version": "1.0.5"
+  ,"manifest_version": 2
+  
+  ,"description": "__MSG_extDescription__"
+  ,"icons": { "128": "icon128.png" }
+  ,"default_locale": "en"
+  
+  ,"content_scripts": [
+    {
+      "matches": ["*://*.yemeksepeti.com/*"]
+	  ,"css": ["extensionStyles.css"]
+      ,"js": ["lib/jquery.js", "yemeksepetiRandom.js"]
+    }
+  ]
+  
+  ,"web_accessible_resources": [
+    "img/*.png"
+  ]
+  
+  ,"homepage_url": "http://neyesem.be"
+  
+}
