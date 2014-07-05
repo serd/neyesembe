@@ -4,8 +4,19 @@ Copyright © klivk.com
 ---------------------
 */
 
-var STRINGS= {
-	'title':chrome.i18n.getMessage("extName")
+var STRINGS = {
+	TR: {
+		title: chrome.i18n.getMessage("extName")
+		,startMessage: 'Önce bir semt seçin'
+		,pickRestaurantTitle: 'Rastgele restoran'
+		,pickProductTitle: 'Rastgele yemek'
+	}
+	,EN: {
+		title: chrome.i18n.getMessage("extName")
+		,startMessage: 'Pick a region to start'
+		,pickRestaurantTitle: 'Random restaurant'
+		,pickProductTitle: 'Random food'
+	}
 };
 
 var pickedProductAnchor;
@@ -25,12 +36,17 @@ var excludedCategories = [
 
 var PICK_PRODUCT_HASH = '#ysPickProduct';
 
+//better to get page language instead of depending on the browser language and use extension locales
+var pageLanguage = getPageLanguage();
+
 var TEMPLATE_MENU = '<div class="ysRandomPicker"></div>';
-var TEMPLATE_PICK_RESTAURANT = '<div class="item pickRestaurant" title="'+chrome.i18n.getMessage("pickRestaurantTitle")+'"></div>';
-var TEMPLATE_PICK_PRODUCT = '<div class="item pickProduct" title="'+chrome.i18n.getMessage("pickProductTitle")+'"></div>';
-var TEMPLATE_START = '<div class="item start" title="'+chrome.i18n.getMessage("startMessage")+'"></div>';
+var TEMPLATE_PICK_RESTAURANT = '<div class="item pickRestaurant"></div>';
+var TEMPLATE_PICK_PRODUCT = '<div class="item pickProduct"></div>';
+var TEMPLATE_START = '<div class="item start"></div>';
+var TEMPLATE_START_TOOLTIP = '<div class="ysTooltip"><div>'+STRINGS[pageLanguage].startMessage+'</div><span>▼</span></div>';
 
 initExtension();
+
 
 ////////////////////////////////
 //
@@ -65,6 +81,49 @@ function initExtension() {
 	}
 	else {
 		$('.ysRandomPicker').append(TEMPLATE_START);
+		
+		$('.ysRandomPicker').prepend(TEMPLATE_START_TOOLTIP);
+		
+		var tooltipTimeout = false;
+		var tooltipAnimFlag = false;
+		
+		$('.ysRandomPicker .item.start').on('click', function(e){
+			
+			e.preventDefault();
+			
+			clearTimeout(tooltipTimeout);
+			
+			var tooltipBox = $('.ysRandomPicker .ysTooltip');
+			
+			tooltipTimeout = setTimeout(function(){
+				
+				tooltipBox.animate({
+					marginTop: 20
+					,opacity: 0
+				},200);
+				
+				tooltipAnimFlag = false;
+			},2000);
+			
+			if (tooltipAnimFlag) {return false;}
+			tooltipAnimFlag = true;
+			
+			tooltipBox.css({
+				marginTop: 20
+				,opacity: 0
+			});
+			
+			tooltipBox.show();
+			
+			tooltipBox.animate({
+				marginTop: 0
+				,opacity: 1
+			},200);
+			
+			return false;
+			
+		});
+		
 	}
 	
 }
@@ -131,6 +190,29 @@ function pickProduct() {
 
 ////////////////////////////////
 //
+// pickRestaurant
+//
+////////////////////////////////
+function pickRestaurant() {
+	
+	var restaurantsList = $('.restoranListe .rmd_item');
+	var restaurantLinks = $('.restoranListe .rmd_item .productName a');
+	
+	var min = 1; //1 instead of 0 to exclude fastPay 
+	var max = restaurantLinks.length - 1;
+	var restaurantIndex = getRandomInteger(min, max);
+	
+	var pickedRestaurant = $(restaurantLinks[restaurantIndex]);
+	var pickedRestaurantLink = pickedRestaurant.attr('href');
+	
+	window.location = pickedRestaurantLink + PICK_PRODUCT_HASH;
+	
+	return false;
+	
+}
+
+////////////////////////////////
+//
 // getRandomInteger
 //
 ////////////////////////////////
@@ -142,24 +224,14 @@ function getRandomInteger(min,max) {
 
 ////////////////////////////////
 //
-// pickRestaurant
+// getPageLanguage
 //
 ////////////////////////////////
-function pickRestaurant() {
+function getPageLanguage() {
 	
-	var restaurantsList = $('.restoranListe .rmd_item');
-	var restaurantLinks = $('.restoranListe .rmd_item .productName a');
-	
-	var i;
-	var min = 1; //1 instead of 0 to exclude fastPay 
-	var max = restaurantLinks.length - 1;
-	var restaurantIndex = Math.floor(Math.random()*(max-min+1)+min);
-	
-	var pickedRestaurant = $(restaurantLinks[restaurantIndex]);
-	var pickedRestaurantLink = pickedRestaurant.attr('href');
-	
-	window.location = pickedRestaurantLink + PICK_PRODUCT_HASH;
-	
-	return false;
-	
+	if (  $('#ctl00_ctl00_RightHeader_imgbtnLanguage').attr('src').indexOf('Default_tr-TR') == -1 ) {
+		return 'EN';
+	}
+	return 'TR';
+
 }
