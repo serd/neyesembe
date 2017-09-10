@@ -6,38 +6,57 @@ Copyright © klivk.com
 
 var STRINGS = {
 	TR: {
-		title: chrome.i18n.getMessage("extName")
-		,startMessage: 'Önce bir semt seçin'
-		,pickRestaurantTitle: 'Rastgele restoran'
-		,pickProductTitle: 'Rastgele yemek'
+		title: chrome.i18n.getMessage("extName"),
+		startMessage: 'Önce bir semt seçin',
+		pickRestaurantTitle: 'Rastgele restoran',
+		pickProductTitle: 'Rastgele yemek',
+        excludedCategories: [
+        	'İçecekler',
+        	'Içecekler',
+        	'Tatlılar',
+        	'Çorbalar',
+        	'Yan Ürünler',
+        	'Vitamin Bar',
+        	'Soslar',
+        	'Paket Soslar',
+        	'Salatalar',
+        	'Salatalar & Mezeler',
+            'Diğer Lezzetler',
+            'Tatlı & Dondurmalar'
+        ]
 	}
 	,EN: {
-		title: chrome.i18n.getMessage("extName")
-		,startMessage: 'Pick a region to start'
-		,pickRestaurantTitle: 'Random restaurant'
-		,pickProductTitle: 'Random food'
+		title: chrome.i18n.getMessage("extName"),
+		startMessage: 'Pick a region to start',
+		pickRestaurantTitle: 'Random restaurant',
+		pickProductTitle: 'Random food',
+        excludedCategories: [
+        	'İçecekler',
+        	'Içecekler',
+        	'Tatlılar',
+        	'Çorbalar',
+        	'Yan Ürünler',
+        	'Vitamin Bar',
+        	'Soslar',
+        	'Paket Soslar',
+        	'Salatalar',
+        	'Salatalar & Mezeler',
+            'Diğer Lezzetler',
+            'Tatlı & Dondurmalar'
+        ]
 	}
 };
 
 var pickedProductAnchor;
 
-var excludedCategories = [
-	'İçecekler'
-	,'Içecekler'
-	,'Tatlılar'
-	,'Çorbalar'
-	,'Yan Ürünler'
-	,'Vitamin Bar'
-	,'Soslar'
-	,'Paket Soslar'
-	,'Salatalar'
-	,'Salatalar & Mezeler'
-];
+
 
 var PICK_PRODUCT_HASH = '#ysPickProduct';
 
 //better to get page language instead of depending on the browser language and use extension locales
 var pageLanguage = getPageLanguage();
+
+var excludedCategories = STRINGS[pageLanguage]['excludedCategories'];
 
 var TEMPLATE_MENU = '<div class="ysRandomPicker"></div>';
 var TEMPLATE_PICK_RESTAURANT = '<div class="item pickRestaurant"></div>';
@@ -54,6 +73,18 @@ initExtension();
 //
 ////////////////////////////////
 function initExtension() {
+    
+    var TEMPLATE_BUTTON = '<button class="ys-btn ys-btn-block ys-random-picker-main-button">NE YESEM?</button>';
+    
+    $('.ys-basket').before(TEMPLATE_BUTTON);
+    
+	$('.ys-random-picker-main-button').on('click', function(){
+		pickProduct();
+	});
+    
+    
+    
+    
 
 	$('.ContentLeft').css({position:'relative'});
 	$('.ContentLeft .logo').before(TEMPLATE_MENU);
@@ -163,28 +194,66 @@ function onProductListPage() {
 ////////////////////////////////
 function pickProduct() {
 	
-	var productsArray = $('.rmd_product');
-	var pickedProduct;
-	var productFoundFlag = false;
-	
-	while (productFoundFlag == false) {
-	
-		var productIndex = getRandomInteger(0, productsArray.length - 1);
-		pickedProduct = $('.rmd_product').eq(productIndex);
-		
-		var productCategory = pickedProduct.closest('td').find('.rmd_header .rmd_hard').text();
-		productCategory = $.trim(productCategory);
-		
-		if ($.inArray(productCategory, excludedCategories) == -1) {
-			productFoundFlag = true;
-		}
-		
-	}
-	
-	if (pickedProductAnchor) { pickedProductAnchor.removeClass('pickedProduct'); }
-	pickedProductAnchor = pickedProduct.find('#AddToBasketHyperLink');
-	pickedProductAnchor.addClass('pickedProduct');
-	$('.pickedProduct')[0].click();
+    //select product group
+    
+    var productGroups = $('.RestaurantMenu .restaurantDetailBox');
+    
+    if (productGroups.length == 0) {
+        return;
+    }
+    
+    productGroupFound = false;
+    
+    var productGroupIndex = getRandomInteger(0, productGroups.length - 1);
+    var productGroup = productGroups.eq(productGroupIndex);
+    var productGroupCategory = productGroup.find('.head h2').text();
+    
+    
+    if ($.inArray(productGroupCategory, excludedCategories) == -1) {
+        
+        productGroupFound = true;
+    
+    }
+    else {
+        
+        var i = 0;
+        var maxCount = 50;
+        
+        while(productGroupFound == false && i < maxCount) {
+
+            productGroupIndex = getRandomInteger(0, productGroups.length - 1);
+            productGroup = productGroups.eq(productGroupIndex);
+            productGroupCategory = productGroup.find('.head h2').text();
+            
+            if ($.inArray(productGroupCategory, excludedCategories) == -1) {
+
+                productGroupFound = true;
+
+            }
+            
+            i++;
+        
+        }
+        
+    }
+    
+    // find product list
+    
+    var productsList = productGroups.eq(productGroupIndex).find('.listBody > ul > li');
+    
+    if (productsList.length == 0) {
+        return;
+    }
+    
+    //get random product
+    
+    var productIndex = getRandomInteger(0, productsList.length - 1);
+    pickedProduct = productsList.eq(productIndex);
+    pickedProductAnchor = pickedProduct.find('.table-row > .productName > a');
+    
+    if (pickedProductAnchor.length > 0) {
+        pickedProductAnchor[0].click();
+    }
 	
 }
 
@@ -195,8 +264,7 @@ function pickProduct() {
 ////////////////////////////////
 function pickRestaurant() {
 	
-	var restaurantsList = $('.restoranListe .rmd_item');
-	var restaurantLinks = $('.restoranListe .rmd_item .productName a');
+	var restaurantLinks = $('.restoranListeDetail .rmd_item .productName a');
 	
 	var min = 1; //1 instead of 0 to exclude fastPay 
 	var max = restaurantLinks.length - 1;
@@ -228,8 +296,8 @@ function getRandomInteger(min,max) {
 //
 ////////////////////////////////
 function getPageLanguage() {
-	
-	if (  $('#ctl00_ctl00_RightHeader_imgbtnLanguage').attr('src').indexOf('Default_tr-TR') == -1 ) {
+	console.log($('head').attr('lang'));
+	if (  $('head').attr('lang').indexOf('en') != -1 ) {
 		return 'EN';
 	}
 	return 'TR';

@@ -11,4 +11,4 @@ neyesembe
 
 - This extension is not associated with Yemeksepeti.com.
 
-Copyright © klivk.com
+Copyright © serdar.work
