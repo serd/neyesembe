@@ -117,20 +117,8 @@ function initExtension() {
     
     
 
-	$('.ContentLeft').css({position:'relative'});
-	$('.ContentLeft .logo').before(TEMPLATE_MENU);
 	
-	if ( $('.ContentLeft .logo').css('position') != 'fixed' ) {
-		$('.ysRandomPicker').css({position:'static'});
-	}
-	
-	if (onRestaurantListPage()) {
-		$('.ysRandomPicker').append(TEMPLATE_PICK_RESTAURANT);
-		$('.ysRandomPicker .pickRestaurant').on('click', function(){
-			pickRestaurant();
-		});
-	}
-	else if (onProductListPage()) {
+	if (onProductListPage()) {
 		$('.ysRandomPicker').append(TEMPLATE_PICK_PRODUCT);
 		$('.ysRandomPicker .pickProduct').on('click', function(){
 			pickProduct();
