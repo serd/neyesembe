@@ -7,7 +7,7 @@ Copyright © klivk.com
 var STRINGS = {
 	TR: {
 		title: chrome.i18n.getMessage("extName"),
-		startMessage: 'Önce bir semt seçin',
+		startMessage: 'Önce bir semt seçin.',
 		pickRestaurantTitle: 'Rastgele restoran',
 		pickProductTitle: 'Rastgele yemek',
         excludedCategories: [
@@ -27,7 +27,7 @@ var STRINGS = {
 	}
 	,EN: {
 		title: chrome.i18n.getMessage("extName"),
-		startMessage: 'Pick a region to start',
+		startMessage: 'Pick a region to start.',
 		pickRestaurantTitle: 'Random restaurant',
 		pickProductTitle: 'Random food',
         excludedCategories: [
@@ -78,11 +78,42 @@ function initExtension() {
     
     $('.ys-basket').before(TEMPLATE_BUTTON);
     
-	$('.ys-random-picker-main-button').on('click', function(){
-		pickProduct();
-	});
+    if (onRestaurantListPage()) {
+    
+    	$('.ys-random-picker-main-button').on('click', function(){
+    		console.log('PICK_RESTAURANT');
+    	});
+    
+    }
+    else if (onProductListPage()) {
+        
+    	$('.ys-random-picker-main-button').on('click', function(){
+    		pickProduct();
+    	});
+    
+    }
+    else {
+    
+        var infoTimeout;
+        
+    	$('.ys-random-picker-main-button').on('click', function(){
+    		
+            var thisButton = $(this);
+            thisButton.html(STRINGS[pageLanguage].startMessage);
+            clearTimeout(infoTimeout);
+            infoTimeout = setTimeout(function(){
+                
+                thisButton.html('NE YESEM?');
+            
+            }, 2000);
+            
+    	});
+    
+    }   
     
     
+	
+    return;
     
     
 
@@ -166,7 +197,7 @@ function initExtension() {
 ////////////////////////////////
 function onRestaurantListPage() {
 
-	if ($('.restoranListe').length) {
+	if ($('.ys-RestaurantList .ys-reslist-items').length) {
 		return true;
 	}
 	return false;
@@ -180,7 +211,7 @@ function onRestaurantListPage() {
 ////////////////////////////////
 function onProductListPage() {
 
-	if ($('#restaurant-detail-head').length) {
+	if ($('.RestaurantMenu .restaurantDetailBox').length) {
 		return true;
 	}
 	return false;
@@ -296,7 +327,7 @@ function getRandomInteger(min,max) {
 //
 ////////////////////////////////
 function getPageLanguage() {
-	console.log($('head').attr('lang'));
+
 	if (  $('head').attr('lang').indexOf('en') != -1 ) {
 		return 'EN';
 	}
