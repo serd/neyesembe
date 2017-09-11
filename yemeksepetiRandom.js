@@ -23,7 +23,8 @@ var STRINGS = {
             'Diğer Lezzetler',
             'Tatlı & Dondurmalar',
             'Başlangıçlar',
-            'Yan Ürünler'
+            'Yan Ürünler',
+            'Soğuk İçecekler'
         ]
 	}
 	,EN: {
@@ -45,30 +46,18 @@ var STRINGS = {
             'Diğer Lezzetler',
             'Tatlı & Dondurmalar',
             'Başlangıçlar',
-            'Yan Ürünler'
+            'Yan Ürünler',
+            'Soğuk İçecekler'
         ]
 	}
 };
 
 var pickedProductAnchor;
-
-
-
 var PICK_PRODUCT_HASH = '#ys-random-picker';
-
 var pageLanguage = getPageLanguage();
-
 var excludedCategories = STRINGS[pageLanguage]['excludedCategories'];
 
-var TEMPLATE_MENU = '<div class="ysRandomPicker"></div>';
-var TEMPLATE_PICK_RESTAURANT = '<div class="item pickRestaurant"></div>';
-var TEMPLATE_PICK_PRODUCT = '<div class="item pickProduct"></div>';
-var TEMPLATE_START = '<div class="item start"></div>';
-var TEMPLATE_START_TOOLTIP = '<div class="ysTooltip"><div>'+STRINGS[pageLanguage].startMessage+'</div><span>▼</span></div>';
-
 initExtension();
-
-
 
 /**
  * initExtension
