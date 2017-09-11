@@ -22,7 +22,8 @@ var STRINGS = {
         	'Salatalar & Mezeler',
             'Diğer Lezzetler',
             'Tatlı & Dondurmalar',
-            'Başlangıçlar'
+            'Başlangıçlar',
+            'Yan Ürünler'
         ]
 	}
 	,EN: {
@@ -43,7 +44,8 @@ var STRINGS = {
         	'Salatalar & Mezeler',
             'Diğer Lezzetler',
             'Tatlı & Dondurmalar',
-            'Başlangıçlar'
+            'Başlangıçlar',
+            'Yan Ürünler'
         ]
 	}
 };
