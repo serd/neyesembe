@@ -1,8 +1,7 @@
-/*
----------------------
-Copyright © klivk.com
----------------------
-*/
+/**
+ * serdar.work
+ *
+ */
 
 var STRINGS = {
 	TR: {
@@ -22,7 +21,8 @@ var STRINGS = {
         	'Salatalar',
         	'Salatalar & Mezeler',
             'Diğer Lezzetler',
-            'Tatlı & Dondurmalar'
+            'Tatlı & Dondurmalar',
+            'Başlangıçlar'
         ]
 	}
 	,EN: {
@@ -42,7 +42,8 @@ var STRINGS = {
         	'Salatalar',
         	'Salatalar & Mezeler',
             'Diğer Lezzetler',
-            'Tatlı & Dondurmalar'
+            'Tatlı & Dondurmalar',
+            'Başlangıçlar'
         ]
 	}
 };
@@ -51,9 +52,8 @@ var pickedProductAnchor;
 
 
 
-var PICK_PRODUCT_HASH = '#ysPickProduct';
+var PICK_PRODUCT_HASH = '#ys-random-picker';
 
-//better to get page language instead of depending on the browser language and use extension locales
 var pageLanguage = getPageLanguage();
 
 var excludedCategories = STRINGS[pageLanguage]['excludedCategories'];
@@ -67,11 +67,11 @@ var TEMPLATE_START_TOOLTIP = '<div class="ysTooltip"><div>'+STRINGS[pageLanguage
 initExtension();
 
 
-////////////////////////////////
-//
-// initExtension
-//
-////////////////////////////////
+
+/**
+ * initExtension
+ *
+ */
 function initExtension() {
     
     var TEMPLATE_BUTTON = '<button class="ys-btn ys-btn-block ys-random-picker-main-button">NE YESEM?</button>';
@@ -81,8 +81,10 @@ function initExtension() {
     if (onRestaurantListPage()) {
     
     	$('.ys-random-picker-main-button').on('click', function(){
-    		console.log('PICK_RESTAURANT');
-    	});
+            
+            pickRestaurant();
+    	
+        });
     
     }
     else if (onProductListPage()) {
@@ -90,6 +92,11 @@ function initExtension() {
     	$('.ys-random-picker-main-button').on('click', function(){
     		pickProduct();
     	});
+        
+		//check if we need to pick a product when page loads
+		if (window.location.href.indexOf(PICK_PRODUCT_HASH) != -1) {
+			pickProduct();
+		}
     
     }
     else {
@@ -111,106 +118,44 @@ function initExtension() {
     
     }   
     
-    
-	
-    return;
-    
-    
-
-	
-	if (onProductListPage()) {
-		$('.ysRandomPicker').append(TEMPLATE_PICK_PRODUCT);
-		$('.ysRandomPicker .pickProduct').on('click', function(){
-			pickProduct();
-		});
-		
-		//check if we need to pick a product when page loads
-		if (window.location.href.indexOf(PICK_PRODUCT_HASH) != -1) {
-			pickProduct();
-		}
-	}
-	else {
-		$('.ysRandomPicker').append(TEMPLATE_START);
-		
-		$('.ysRandomPicker').prepend(TEMPLATE_START_TOOLTIP);
-		
-		var tooltipTimeout = false;
-		var tooltipAnimFlag = false;
-		
-		$('.ysRandomPicker .item.start').on('click', function(e){
-			
-			e.preventDefault();
-			
-			clearTimeout(tooltipTimeout);
-			
-			var tooltipBox = $('.ysRandomPicker .ysTooltip');
-			
-			tooltipTimeout = setTimeout(function(){
-				
-				tooltipBox.animate({
-					marginTop: 20
-					,opacity: 0
-				},200);
-				
-				tooltipAnimFlag = false;
-			},2000);
-			
-			if (tooltipAnimFlag) {return false;}
-			tooltipAnimFlag = true;
-			
-			tooltipBox.css({
-				marginTop: 20
-				,opacity: 0
-			});
-			
-			tooltipBox.show();
-			
-			tooltipBox.animate({
-				marginTop: 0
-				,opacity: 1
-			},200);
-			
-			return false;
-			
-		});
-		
-	}
-	
 }
 
-////////////////////////////////
-//
-// onRestaurantListPage
-//
-////////////////////////////////
+/**
+ * onRestaurantListPage
+ *
+ */
 function onRestaurantListPage() {
 
 	if ($('.ys-RestaurantList .ys-reslist-items').length) {
+        
 		return true;
-	}
-	return false;
+	
+    }
+	
+    return false;
 	
 }
 
-////////////////////////////////
-//
-// onProductListPage
-//
-////////////////////////////////
+/**
+ * onProductListPage
+ *
+ */
 function onProductListPage() {
 
 	if ($('.RestaurantMenu .restaurantDetailBox').length) {
+        
 		return true;
-	}
-	return false;
+	
+    }
+	
+    return false;
 	
 }
 
-////////////////////////////////
-//
-// pickProduct
-//
-////////////////////////////////
+/**
+ * pickProduct
+ *
+ */
 function pickProduct() {
 	
     //select product group
@@ -218,7 +163,9 @@ function pickProduct() {
     var productGroups = $('.RestaurantMenu .restaurantDetailBox');
     
     if (productGroups.length == 0) {
+        
         return;
+    
     }
     
     productGroupFound = false;
@@ -276,16 +223,15 @@ function pickProduct() {
 	
 }
 
-////////////////////////////////
-//
-// pickRestaurant
-//
-////////////////////////////////
+/**
+ * pickRestaurant
+ *
+ */
 function pickRestaurant() {
 	
-	var restaurantLinks = $('.restoranListeDetail .rmd_item .productName a');
+	var restaurantLinks = $('.ys-reslist-items .ys-item a.restaurantName');
 	
-	var min = 1; //1 instead of 0 to exclude fastPay 
+	var min = 0;
 	var max = restaurantLinks.length - 1;
 	var restaurantIndex = getRandomInteger(min, max);
 	
@@ -298,24 +244,24 @@ function pickRestaurant() {
 	
 }
 
-////////////////////////////////
-//
-// getRandomInteger
-//
-////////////////////////////////
+/**
+ * getRandomInteger
+ *
+ */
 function getRandomInteger(min,max) {
 
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 	
 }
 
-////////////////////////////////
-//
-// getPageLanguage
-//
-////////////////////////////////
+/**
+ * getPageLanguage
+ *
+ */
 function getPageLanguage() {
-
+    
+    //better to get page language instead of depending on the browser language and use extension locales
+    
 	if (  $('head').attr('lang').indexOf('en') != -1 ) {
 		return 'EN';
 	}

@@ -1,6 +1,6 @@
 {
   "name": "__MSG_extName__"
-  ,"version": "1.0.9"
+  ,"version": "1.1.0"
   ,"manifest_version": 2
   
   ,"description": "__MSG_extDescription__"
@@ -15,10 +15,6 @@
     }
   ]
   
-  ,"web_accessible_resources": [
-    "img/*.png"
-  ]
-  
-  ,"homepage_url": "http://neyesem.be"
+  ,"homepage_url": "http://serdar.work"
   
 }
