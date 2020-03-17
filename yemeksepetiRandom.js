@@ -67,7 +67,7 @@ function initExtension() {
     
     var TEMPLATE_BUTTON = '<button class="ys-btn ys-btn-block ys-random-picker-main-button">NE YESEM?</button>';
     
-    $('.ys-basket').before(TEMPLATE_BUTTON);
+    $('#basket-container').prepend(TEMPLATE_BUTTON);
     
     if (onRestaurantListPage()) {
     
@@ -197,7 +197,7 @@ function pickProduct() {
     // find product list
     
     var productsList = productGroups.eq(productGroupIndex).find('.listBody > ul > li');
-    
+
     if (productsList.length == 0) {
         return;
     }
@@ -206,7 +206,7 @@ function pickProduct() {
     
     var productIndex = getRandomInteger(0, productsList.length - 1);
     pickedProduct = productsList.eq(productIndex);
-    pickedProductAnchor = pickedProduct.find('.table-row > .productName > a');
+    pickedProductAnchor = pickedProduct.find('.product > .product-info > a');
     
     if (pickedProductAnchor.length > 0) {
         pickedProductAnchor[0].click();
@@ -253,7 +253,7 @@ function getPageLanguage() {
     
     //better to get page language instead of depending on the browser language and use extension locales
     
-	if (  $('head').attr('lang').indexOf('en') != -1 ) {
+	if (  $('html').attr('lang').indexOf('en') != -1 ) {
 		return 'EN';
 	}
 	return 'TR';
